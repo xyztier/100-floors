@@ -1,8 +1,9 @@
-class_name Joystick extends Node2D
+class_name Joystick extends Control
 
 
 const STICK_CLAMP: float = 100.0
 
+@export var has_cooldown: bool = false
 @export var click_area: float = 256.0
 
 
@@ -20,11 +21,15 @@ var default_pos: Vector2 = Vector2.ZERO
 var dir: Vector2 = Vector2.ZERO
 var dragging: bool = false
 
+# Used only if "has_cooldown" is true
+var in_cooldown: bool = false
+
 var my_index: int = 0
 
 
-@onready var base: Sprite2D = $Base
-@onready var stick: Marker2D = $Stick
+@onready var base: CenterContainer = $Base
+@onready var stick: CenterContainer = $Stick
+@onready var cooldown_timer: Timer = $CooldownTimer
 
 
 func _ready() -> void:
@@ -32,6 +37,9 @@ func _ready() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if in_cooldown:
+		return
+
 	if event is InputEventScreenTouch:
 		if event.is_pressed():
 			if _in_click_area(event.position):
@@ -49,13 +57,13 @@ func _input(event: InputEvent) -> void:
 
 
 func _control_joystick(pos: Vector2) -> void:
-	stick.global_position = pos
+	stick.global_position = pos - (stick.size / 2.0)
 	dir = stick.global_position - global_position
 
 	# Visual
 	stick.global_position = stick.global_position.clamp(
-		to_global(Vector2(-STICK_CLAMP, -STICK_CLAMP)),
-		to_global(Vector2(STICK_CLAMP, STICK_CLAMP))
+		to_global(Vector2(-STICK_CLAMP, -STICK_CLAMP)) - (stick.size / 2.0),
+		to_global(Vector2(STICK_CLAMP, STICK_CLAMP)) - (stick.size / 2.0)
 	)
 
 
@@ -71,12 +79,21 @@ func _release_joystick() -> void:
 	var tween := get_tree().create_tween()
 	tween.tween_property(
 		stick,
-		"global_position",
-		global_position,
+		"position",
+		-(stick.size / 2),
 		0.1
 	).set_ease(
 		Tween.EASE_OUT).set_trans(
 			Tween.TRANS_EXPO)
+
+	if has_cooldown and not in_cooldown:
+		_enter_cooldown()
+		await cooldown_timer.timeout
+
+
+func _enter_cooldown():
+	in_cooldown = true
+	cooldown_timer.start()
 
 
 func _in_click_area(pos: Vector2) -> bool:
@@ -85,3 +102,15 @@ func _in_click_area(pos: Vector2) -> bool:
 		(pos.x >= bounds[0].x && pos.y >= bounds[0].y) &&
 		(pos.x <= bounds[1].x && pos.y <= bounds[1].y)
 	)
+
+
+func _on_cooldown_timer_timeout() -> void:
+	in_cooldown = false
+
+
+func to_local(global: Vector2) -> Vector2:
+	return (get_global_transform().affine_inverse()) * global
+
+
+func to_global(local: Vector2) -> Vector2:
+	return (get_global_transform()) * local

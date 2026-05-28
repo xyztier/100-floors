@@ -1,5 +1,6 @@
 class_name Player extends Entity
 
+
 @export_subgroup("Movement")
 @export var move_speed: float = 700.0
 
@@ -7,7 +8,10 @@ class_name Player extends Entity
 @export var dash_speed: float = 1500.0
 @export var dash_distance: float = 500.0
 @export var dash_duration: float = 0.5 # in seconds
-@export var dash_cooldown: float = 0.2 # in seconds
+@export var dash_cooldown: float = 0.5 # in seconds
+
+@export_subgroup("Attack")
+@export var basic_attack_cooldown: float = 0.2
 
 # This is very unstable
 @export_subgroup("Node References")
@@ -44,6 +48,8 @@ var dash_distance_remaining: float = 0.0
 var dash_time_remaining: float = 0.0
 var dash_recharge_time: float = 0.0
 var dash_target_point: Vector2 = Vector2.ZERO
+
+var basic_attack_recharge_time: float = 0.0
 
 
 @onready var dash_cooldown_timer: Timer = $DashCooldownTimer

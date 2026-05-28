@@ -1,4 +1,4 @@
-class_name DashJoystick extends Joystick
+class_name BasicAttackJoystick extends Joystick
 
 
 @export var player: Player:
@@ -9,14 +9,17 @@ class_name DashJoystick extends Joystick
 
 
 func _ready() -> void:
-	#global_position.x = screen_size.x - 288.0 # Temporary (also in move_joystick)
+	global_position.x = screen_size.x - 288.0 # Temporary (also in move_joystick)
 	super()
-	cooldown_timer.wait_time = player.dash_recharge_time
+	cooldown_timer.wait_time = player.basic_attack_recharge_time
 
 
 func _control_joystick(pos: Vector2) -> void:
+	if in_cooldown:
+		return
+
 	super(pos)
-	Game.dash_joystick_position = dir.normalized()
+	Game.basic_attack_joystick_position = dir.normalized()
 
 
 func _release_joystick() -> void:
@@ -26,9 +29,4 @@ func _release_joystick() -> void:
 	if stick.position == Vector2.ZERO:
 		return
 
-	Game.dash_joystick_released = true
-
-	await super()
-
-	Game.dash_joystick_position = Vector2.ZERO
-	Game.dash_joystick_released = false
+	super()
