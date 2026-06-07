@@ -16,10 +16,10 @@ func _ready() -> void:
 func _control_joystick(pos: Vector2) -> void:
 	super(pos)
 	# Joystick is clicked only, not dragged
-	print(stick.position)
 	if stick.position == Vector2.ZERO:
 		dir = _get_auto_aim_direction()
 	Game.basic_attack_joystick_position = dir.normalized()
+	Game.last_basic_attack_joystick_position = dir.normalized()
 
 
 func _release_joystick() -> void:
@@ -28,6 +28,7 @@ func _release_joystick() -> void:
 	if stick.position == Vector2.ZERO:
 		return
 
+	print("p")
 	Game.basic_attack_joystick_released = true
 
 	await super()
