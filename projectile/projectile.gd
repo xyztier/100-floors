@@ -14,5 +14,9 @@ func apply_hit_effect(entity: Entity) -> void:
 	pass
 
 
+func free() -> void:
+	queue_free()
+
+
 func wait(time: float) -> void:
 	await get_tree().create_timer(time).timeout

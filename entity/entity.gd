@@ -10,7 +10,7 @@ class_name Entity extends CharacterBody2D
 
 
 func take_damage(amount: float) -> void:
-	print(name + " got hit (%.2f -> %.2f)" % [health, health - amount])
+	print(name, " got hit (%.2f -> %.2f)" % [health, health - amount])
 	health -= amount
 	if health <= 0:
 		womp_womp()
@@ -18,7 +18,7 @@ func take_damage(amount: float) -> void:
 
 # Death function
 func womp_womp() -> void:
-	print(name + " died")
+	print(name, " died")
 	set_physics_process(false)
 	set_process(false)
 	sprite.self_modulate.a = 0.3

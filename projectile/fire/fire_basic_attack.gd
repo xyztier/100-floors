@@ -25,6 +25,7 @@ func apply_hit_effect(entity: Entity) -> void:
 
 	_burn_effect(entity)
 	_reduced_heal(entity)
+	free()
 
 
 func _burn_effect(entity: Entity) -> void:

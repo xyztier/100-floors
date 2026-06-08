@@ -9,15 +9,20 @@ class_name Hitbox extends Area2D
 
 
 func _ready() -> void:
-	if not is_connected("body_entered", Callable(self, "_on_hitbox_pinged")):
-		connect("body_entered", Callable(self, "_on_hitbox_pinged"))
+	if not is_connected("body_entered", _on_hitbox_pinged):
+		connect("body_entered", _on_hitbox_pinged)
 
 
 func _on_hitbox_pinged(hurtbox: Hurtbox) -> void:
-	var target := hurtbox.actor
+	print("yay")
+
+	var target := hurtbox.actor as Entity
 	var damage := actor.attack_damage
 
+	print(name, " hit ", target)
+
 	target.take_damage(damage)
+
 	if actor is Projectile:
 		actor.apply_hit_effect(target)
-		actor.queue_free()
+		print(name, " applied hit effect to ", target)
