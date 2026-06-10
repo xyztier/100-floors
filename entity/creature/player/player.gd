@@ -1,20 +1,6 @@
 class_name Player extends Creature
 
 
-const MAX_ENEMY_DISTANCE: float = 1500.0 # idk
-const HITMARKER_RADIUS: float = 100.0
-
-
-@export_group("Kit")
-@export var ability: Ability = null
-@export var weapon: Weapon = null
-@export_group("Dash")
-@export var dash_speed: float = 1500.0
-@export var dash_distance: float = 500.0
-@export var dash_duration: float = 0.5 # in seconds
-@export var dash_cooldown: float = 0.5 # in seconds
-
-
 enum State {
 	DASHING,
 	IDLE,
@@ -28,13 +14,33 @@ enum State {
 	USING_SKILL_TWO
 }
 
+const MAX_ENEMY_DISTANCE: float = 1500.0 # idk
+const HITMARKER_RADIUS: float = 100.0
+
+
+@export_group("Kit")
+@export var ability: Ability:
+	get:
+		var abilities := get_tree().get_first_node_in_group("Abilities").get_children()
+		if not ability:
+			ability = abilities[0]
+		return ability
+@export var weapon: Weapon:
+	get:
+		var weapons := get_tree().get_first_node_in_group("Weapons").get_children()
+		if not weapon:
+			weapon = weapons[0]
+		return weapon
+@export_group("Dash")
+@export var dash_speed: float = 1500.0
+@export var dash_distance: float = 500.0
+@export var dash_duration: float = 0.5 # in seconds
+@export var dash_cooldown: float = 0.5 # in seconds
+
+
 var current_state: State = State.IDLE
 
-var current_kit: Kit:
-	get:
-		if not current_kit:
-			current_kit = ability
-		return current_kit
+var current_kit: Kit = null
 
 var state_names: Array[String] = [
 	"DASHING",
@@ -225,6 +231,8 @@ func _process_using_skill_two() -> void:
 func _setup() -> void:
 	super()
 
+	current_kit = weapon
+
 	# Dash
 	if not dash_cooldown_timer.is_connected("timeout", _on_dash_cooldown_timeout):
 		dash_cooldown_timer.connect("timeout", _on_dash_cooldown_timeout)
@@ -267,6 +275,11 @@ func get_closest_enemy() -> Enemy:
 
 func get_distance(enemy: Enemy) -> float:
 	return (enemy.global_position - global_position).length()
+
+
+func swap_kit() -> void:
+	@warning_ignore("incompatible_ternary")
+	current_kit = weapon if current_kit == ability else ability
 
 
 func _on_dash_cooldown_timeout() -> void:

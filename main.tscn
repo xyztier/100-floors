@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://j1gsj5tkeuw7" path="res://assets/icon.svg" id="3_h2yge"]
 [ext_resource type="PackedScene" uid="uid://2njfptlxeogb" path="res://ui/joystick/move/move_joystick.tscn" id="4_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://bbgwghw3gnl5f" path="res://ui/joystick/dash/dash_joystick.tscn" id="5_lquwl"]
+[ext_resource type="Script" uid="uid://dbupje5dnbyuv" path="res://temp_swap_kit_button.gd" id="7_272bh"]
 [ext_resource type="PackedScene" uid="uid://btlu3iodsdf2h" path="res://ui/joystick/attack/basic_attack/basic_attack_joystick.tscn" id="8_5vw27"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0xm2m"]
@@ -114,3 +115,23 @@ grow_horizontal = 0
 grow_vertical = 0
 player = NodePath("../../../Entities/Player")
 click_area = 128.0
+
+[node name="TempSwapKitButton" type="Button" parent="UI/Control" unique_id=419244425 node_paths=PackedStringArray("player")]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -256.0
+offset_top = -504.0
+offset_right = -64.0
+offset_bottom = -441.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 40
+text = "CurrentKit"
+script = ExtResource("7_272bh")
+player = NodePath("../../../Entities/Player")
+
+[connection signal="pressed" from="UI/Control/TempSwapKitButton" to="UI/Control/TempSwapKitButton" method="_on_pressed"]

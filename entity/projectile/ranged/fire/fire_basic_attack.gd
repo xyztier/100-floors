@@ -1,4 +1,4 @@
-class_name FireBasicAttack extends Projectile
+class_name FireBasicAttack extends RangedProjectile
 
 
 const PERCENT_TO_DECIMAL: float = 0.01

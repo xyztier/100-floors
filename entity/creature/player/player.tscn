@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://d3fcyi7c2soig" path="res://hbox/hurtbox/hurtbox.tscn" id="4_bgq54"]
 [ext_resource type="Script" uid="uid://dccv4eh7vlfs2" path="res://kits/abilities/fire.gd" id="5_wjhpj"]
 [ext_resource type="Script" uid="uid://dt0m3rvdpddyp" path="res://kits/weapons/gun.gd" id="6_2iqu4"]
+[ext_resource type="PackedScene" uid="uid://btpkhaot7gad" path="res://entity/projectile/ranged/bullet/bullet.tscn" id="6_l1jwt"]
 
 [sub_resource type="Gradient" id="Gradient_bksb7"]
 offsets = PackedFloat32Array(0)
@@ -19,10 +20,9 @@ size = Vector2(192, 192)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bksb7"]
 size = Vector2(196, 196)
 
-[node name="Player" unique_id=1584016522 node_paths=PackedStringArray("ability") groups=["Player"] instance=ExtResource("1_hxyxd")]
+[node name="Player" unique_id=1584016522 groups=["Player"] instance=ExtResource("1_hxyxd")]
 collision_layer = 1
 script = ExtResource("2_bksb7")
-ability = NodePath("Kits/Abilities/FireAbility")
 dash_speed = 1500.0
 dash_distance = 500.0
 dash_duration = 0.5
@@ -79,16 +79,19 @@ one_shot = true
 
 [node name="Kits" type="Node" parent="." index="7" unique_id=2032754592]
 
-[node name="Abilities" type="Node" parent="Kits" index="0" unique_id=1302314476]
+[node name="Abilities" type="Node" parent="Kits" index="0" unique_id=1302314476 groups=["Abilities"]]
 
 [node name="FireAbility" type="Node" parent="Kits/Abilities" index="0" unique_id=1280699689 node_paths=PackedStringArray("actor")]
 script = ExtResource("5_wjhpj")
+fire_basic_attack_speed = 700.0
 actor = NodePath("../../..")
 metadata/_custom_type_script = "uid://dccv4eh7vlfs2"
 
-[node name="Weapons" type="Node" parent="Kits" index="1" unique_id=1890260418]
+[node name="Weapons" type="Node" parent="Kits" index="1" unique_id=1890260418 groups=["Weapons"]]
 
 [node name="GunWeapon" type="Node" parent="Kits/Weapons" index="0" unique_id=1850167821 node_paths=PackedStringArray("actor")]
 script = ExtResource("6_2iqu4")
+basic_attack_scene = ExtResource("6_l1jwt")
+bullet_basic_attack_speed = 800.0
 actor = NodePath("../../..")
 metadata/_custom_type_script = "uid://dt0m3rvdpddyp"
